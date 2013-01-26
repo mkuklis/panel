@@ -3,12 +3,10 @@
   "description": "panel component",
   "version": "0.0.1",
   "keywords": ["panel", "ui"],
-  "dependencies": {
-  },
  "scripts": [
     "panel.js",
   ],
   "styles": [
-    "tip.css"
+    "panel.css"
   ],
 }
