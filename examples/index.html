@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <link href="styles.css" media="screen" rel="stylesheet" type="text/css" />
+    <link href="../panel.css" media="screen" rel="stylesheet" type="text/css" />
+    <script src="../panel.js"></script>
+  </head>
+  <body>
+    <div class="page">
+      <div id="panel1" class="panel" data-transition="overlay">
+        <a href="#panel1" data-action="close">close</a>
+      </div>
+
+      <div id="panel2" class="panel" data-transition="reveal">
+        <a href="#panel2">close</a>
+      </div>
+
+      <div class="content">
+        <a href="#panel1">overlay</a>
+        <a href="#panel2">reveal</a>
+      </div>
+    </div>
+  </body>
+</html>

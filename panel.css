@@ -1,0 +1,42 @@
+.panel {
+  height: 100%;
+  width: 250px;
+  top: 0px;
+  position: absolute;
+  background: #414141;
+  left: -250px;
+  z-index: 1;
+}
+
+.panel.transition-left {
+  -webkit-transition: left .2s ease-out;
+  transition: left .2s ease-out;
+}
+
+.panel.overlay {
+  left: 0px;
+  -webkit-box-shadow: 3px 0px 3px rgba(0,0,0,.15);
+  box-shadow: 3px 0px 3px rgba(0,0,0,.15);
+}
+
+.panel.reveal {
+  left: 0px;
+  z-index: 0;
+}
+
+.content.reveal {
+  z-index: 1;
+  left: 250px;
+  -webkit-transition: left .2s ease-out;
+  transition: left .2s ease-out;
+}
+
+/* content */
+.content {
+  height: 100%;
+  background: #eee;
+  width: 100%;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+}
