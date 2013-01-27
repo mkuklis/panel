@@ -32,7 +32,7 @@
     panels = document.querySelectorAll('.panel');
 
     while (panel = panels[i++]) {
-      closePanel(panel, panel.dataset.transition);
+      close(panel, panel.dataset.transition);
     }
   };
 
