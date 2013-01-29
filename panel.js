@@ -1,26 +1,19 @@
 (function () {
 
-  var transitions = {
-    overlay: function (panel, className) {
-      panel.classList.add('transition-left');
-      panel.classList.toggle(className);
-    },
-
-    reveal: function (panel, className) {
-      var siblings;
-      var i = 0;
-
-      panel.classList.remove('transition-left');
-      panel.classList.toggle(className);
-
-      siblings = getSiblings(panel);
-
-      while (sibling = siblings[i++]) {
-        sibling.classList.add('transition-left');
-        sibling.classList.toggle(className);
-      }
+  var transition = function (panel, className) {
+    if (className == "reveal") {
+      panel.classList.remove('panel-transition-left');
     }
-  };
+
+    if (className == "reveal" || className == "push") {
+      eachSibling(panel, function (sibling) {
+        sibling.classList.add('panel-transition-left');
+        sibling.style.left = panel.offsetWidth + 'px';
+      });
+    }
+
+    panel.classList.add(className);
+  }
 
   var closeAll = function (e) {
     var i = 0;
@@ -30,14 +23,18 @@
         hasParent(e.target, 'panel')) return;
 
     panels = document.querySelectorAll('.panel');
-
     while (panel = panels[i++]) {
       close(panel, panel.dataset.transition);
     }
   };
 
-  var close = function (panel, transition) {
-    panel.classList.remove(transition);
+  var close = function (panel, className) {
+    eachSibling(panel, function (sibling) {
+      sibling.style.left = '0px';
+    });
+
+    panel.classList.add('panel-transition-left');
+    panel.classList.remove(className);
   }
 
   var getPanel = function (e) {
@@ -61,23 +58,22 @@
     return false;
   };
 
-  var getSiblings = function (node) {
+  var eachSibling = function (node, callback) {
     var child = node.parentNode.firstChild;
-    var siblings = [];
 
     while (child = child.nextSibling) {
-      if (child.nodeType == 1 && node != child) {
-        siblings.push(child);
+      if (child.nodeType == 1 &&
+          node != child &&
+          !child.classList.contains('panel')) {
+        callback && callback(child);
       }
     }
-
-    return siblings;
   };
 
   // events
 
   window.addEventListener('click', function (e) {
-    var action, transition;
+    var action, className;
     var panel = getPanel(e);
 
     if (!panel) {
@@ -87,14 +83,16 @@
 
     // options
     action = e.target.dataset.action || "open";
-    transition = panel.dataset.transition || "overlay";
+    className = panel.dataset.transition || "overlay";
 
-    if (action == "close") {
-      close(panel, transition);
+    if (action == "close" ||
+      panel.classList.contains(className)) {
+      close(panel, className);
       return;
     }
 
-    transitions[transition](panel, transition);
+    panel.classList.add('panel-transition-left');
+    transition(panel, className);
 
   }, false);
 

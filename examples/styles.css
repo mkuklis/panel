@@ -2,3 +2,16 @@ body {
   margin: 0;
   padding: 0;
 }
+
+.panel a {
+  color: #fff;
+}
+
+.content {
+  height: 100%;
+  background: #eee;
+  width: 100%;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+}

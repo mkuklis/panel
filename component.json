@@ -3,7 +3,7 @@
   "description": "panel component",
   "version": "0.0.1",
   "keywords": ["panel", "ui"],
- "scripts": [
+  "scripts": [
     "panel.js",
   ],
   "styles": [

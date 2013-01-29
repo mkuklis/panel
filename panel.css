@@ -8,7 +8,7 @@
   z-index: 1;
 }
 
-.panel.transition-left {
+.panel-transition-left {
   -webkit-transition: left .2s ease-out;
   transition: left .2s ease-out;
 }
@@ -19,24 +19,8 @@
   box-shadow: 3px 0px 3px rgba(0,0,0,.15);
 }
 
-.panel.reveal {
+.panel.reveal,
+.panel.push {
   left: 0px;
   z-index: 0;
-}
-
-.content.reveal {
-  z-index: 1;
-  left: 250px;
-  -webkit-transition: left .2s ease-out;
-  transition: left .2s ease-out;
-}
-
-/* content */
-.content {
-  height: 100%;
-  background: #eee;
-  width: 100%;
-  position: absolute;
-  top: 0px;
-  left: 0px;
 }
