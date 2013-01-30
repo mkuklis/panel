@@ -1,18 +1,27 @@
 (function () {
 
-  var transition = function (panel, className) {
-    if (className == "reveal") {
-      panel.classList.remove('panel-transition-left');
-    }
+  var positions = {
+    left: 'panel-transition-left',
+    right: 'panel-transition-right'
+  };
 
-    if (className == "reveal" || className == "push") {
-      eachSibling(panel, function (sibling) {
-        sibling.classList.add('panel-transition-left');
-        sibling.style.left = panel.offsetWidth + 'px';
+  var pushRevealRegex = /reveal|push/;
+
+  var open = function (panel, transition) {
+    var method = (transition == "reveal") ? 'remove' : 'add';
+
+    panel.classList[method](positions.left);
+
+    if (transition.match(pushRevealRegex) != null) {
+      getSiblings(panel).forEach(function (sibling) {
+        if (!sibling.classList.contains('panel')) {
+          sibling.classList.add(positions.left);
+          sibling.style.left = panel.offsetWidth + 'px';
+        }
       });
     }
 
-    panel.classList.add(className);
+    panel.classList.add(transition);
   }
 
   var closeAll = function (e) {
@@ -23,18 +32,22 @@
         hasParent(e.target, 'panel')) return;
 
     panels = document.querySelectorAll('.panel');
+
     while (panel = panels[i++]) {
       close(panel, panel.dataset.transition);
     }
   };
 
   var close = function (panel, className) {
-    eachSibling(panel, function (sibling) {
-      sibling.style.left = '0px';
+    getSiblings(panel).forEach(function (sibling) {
+      if (!sibling.classList.contains('panel')) {
+        sibling.style.left = '0px';
+      }
     });
 
-    panel.classList.add('panel-transition-left');
-    panel.classList.remove(className);
+    if (className != "reveal") {
+      panel.classList.remove(className);
+    }
   }
 
   var getPanel = function (e) {
@@ -58,22 +71,24 @@
     return false;
   };
 
-  var eachSibling = function (node, callback) {
+  var getSiblings = function (node, callback) {
     var child = node.parentNode.firstChild;
+    var siblings = [];
 
     while (child = child.nextSibling) {
       if (child.nodeType == 1 &&
-          node != child &&
-          !child.classList.contains('panel')) {
-        callback && callback(child);
+          node != child) {
+        siblings.push(child);
       }
     }
+
+    return siblings;
   };
 
   // events
 
   window.addEventListener('click', function (e) {
-    var action, className;
+    var action, transition, state;
     var panel = getPanel(e);
 
     if (!panel) {
@@ -83,16 +98,17 @@
 
     // options
     action = e.target.dataset.action || "open";
-    className = panel.dataset.transition || "overlay";
+    transition = panel.dataset.transition || "overlay";
+    state = panel.dataset.state || "open";
 
-    if (action == "close" ||
-      panel.classList.contains(className)) {
-      close(panel, className);
-      return;
+    if (action == "open" && state == "open") {
+      open(panel, transition);
+      panel.dataset.state  = "close";
     }
-
-    panel.classList.add('panel-transition-left');
-    transition(panel, className);
+    else {
+      close(panel, transition);
+      panel.dataset.state  = "open";
+    }
 
   }, false);
 
