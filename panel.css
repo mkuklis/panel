@@ -3,24 +3,26 @@
   width: 250px;
   top: 0px;
   position: absolute;
+  opacity: 0;
   background: #414141;
-  left: -250px;
-  z-index: 1;
 }
 
-.panel-transition-left {
+.panel-left {
   -webkit-transition: left .2s ease-out;
   transition: left .2s ease-out;
 }
 
+.panel-right {
+  -webkit-transition: right .2s ease-out;
+  transition: right .2s ease-out;
+}
+
 .panel.overlay {
-  left: 0px;
   -webkit-box-shadow: 3px 0px 3px rgba(0,0,0,.15);
   box-shadow: 3px 0px 3px rgba(0,0,0,.15);
 }
 
 .panel.reveal,
 .panel.push {
-  left: 0px;
   z-index: 0;
 }
