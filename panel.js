@@ -13,59 +13,63 @@
 
   var transitionEnd = "webkitTransitionEnd";
 
-  var open = {
-    overlay: function (panel, pos) {
-      addStyles(panel, pos, -panel.offsetWidth + 'px');
+  var open = function (panel) {
+    var data = getData(panel);
+    open[data.transition](panel, data.position);
+    setData(panel, "state", "open");
+  }
 
-      setTimeout(function () {
-        addStyles(panel, 'opacity', 1, 'z-index', 999, pos, '0px');
-        panel.classList.add(positionMap[pos]);
-      });
-    },
-
-    reveal: function (panel, pos) {
-      addStyles(panel, 'opacity', 1, 'z-index', 0, pos, '0px');
-
-      findSiblings(panel).forEach(function (sibling) {
-        sibling.classList.add(positionMap[pos]);
-        addStyles(sibling, pos, panel.offsetWidth + 'px');
-      });
-    },
-
-    push: function (panel, pos) {
-      addStyles(panel, 'opacity', 1, 'z-index', 0, pos, '0px');
+  open.overlay = function (panel, pos) {
+    addStyles(panel, pos, -panel.offsetWidth + 'px');
+    setTimeout(function () {
+      addStyles(panel, 'opacity', 1, 'z-index', 999, pos, '0px');
       panel.classList.add(positionMap[pos]);
-
-      findSiblings(panel).forEach(function (sibling) {
-        sibling.classList.add(positionMap[pos]);
-        addStyles(sibling, pos, panel.offsetWidth + 'px');
-      });
-    }
+    });
   };
 
-  var close = {
-    overlay: function (panel, pos) {
-      panel.addEventListener(transitionEnd, clean);
-      addStyles(panel, pos, -panel.offsetWidth + 'px');
-    },
+  open.reveal = function (panel, pos) {
+    addStyles(panel, 'opacity', 1, 'z-index', 998, pos, '0px');
+    findSiblings(panel).forEach(function (sibling) {
+      sibling.classList.add(positionMap[pos]);
+      addStyles(sibling, pos, panel.offsetWidth + 'px', 'z-index', 999);
+    });
+  };
 
-    reveal: function (panel, pos) {
-      findSiblings(panel).forEach(function (sibling) {
-        sibling.panel = panel;
-        removeStyles(sibling, pos);
-        sibling.addEventListener(transitionEnd, clean);
-      });
-    },
+  open.push = function (panel, pos) {
+    addStyles(panel, 'opacity', 1, 'z-index', 998, pos, '0px');
+    panel.classList.add(positionMap[pos]);
+    findSiblings(panel).forEach(function (sibling) {
+      sibling.classList.add(positionMap[pos]);
+      addStyles(sibling, pos, panel.offsetWidth + 'px', 'z-index', 999);
+    });
+  };
 
-    push: function (panel, pos) {
-      findSiblings(panel).forEach(function (sibling) {
-        removeStyles(sibling, pos);
-        sibling.addEventListener(transitionEnd, clean);
-      });
+  var close = function (panel) {
+    var data = getData(panel);
+    close[data.transition](panel, data.position);
+    delete panel.dataset.state;
+  }
 
-      panel.addEventListener(transitionEnd, clean);
-      addStyles(panel, pos, -panel.offsetWidth + 'px');
-    }
+  close.overlay = function (panel, pos) {
+    panel.addEventListener(transitionEnd, clean);
+    addStyles(panel, pos, -panel.offsetWidth + 'px');
+  };
+
+  close.reveal = function (panel, pos) {
+    findSiblings(panel).forEach(function (sibling) {
+      sibling.panel = panel;
+      removeStyles(sibling, pos);
+      sibling.addEventListener(transitionEnd, clean);
+    });
+  };
+
+  close.push = function (panel, pos) {
+    findSiblings(panel).forEach(function (sibling) {
+      removeStyles(sibling, pos);
+      sibling.addEventListener(transitionEnd, clean);
+    });
+    panel.addEventListener(transitionEnd, clean);
+    addStyles(panel, pos, -panel.offsetWidth + 'px');
   };
 
   var clean = function (e) {
@@ -81,28 +85,32 @@
     }
   }
 
-  var closeAll = function (e) {
-    var panel, panels, position;
-    var i = 0;
-
-    if (e.target.classList.contains('panel') ||
-        hasParent(e.target, 'panel')) return;
-
-    panels = document.querySelectorAll('.panel');
-
-    while (panel = panels[i++]) {
-      position = panel.dataset.position || "left";
-      transition = panel.dataset.transition || "overlay";
-      close[transition](panel, position);
-    }
-  };
-
   var getPanel = function (e) {
     var anchor = e.target;
 
     if (!anchor.hash) return;
 
     return document.querySelector(anchor.hash);
+  };
+
+  var isOpen = function (node) {
+    return node.dataset.state == "open";
+  };
+
+  var findOpen = function () {
+    return document.querySelector('.panel[data-state=open]');
+  };
+
+  var getData = function (node) {
+    return {
+      transition: node.dataset.transition || "overlay",
+      state: node.dataset.state || "close",
+      position: node.dataset.position || "left"
+    };
+  };
+
+  var setData = function (node, key, value) {
+    node.dataset[key] = value;
   };
 
   // dom helpers
@@ -162,31 +170,35 @@
   // events
 
   window.addEventListener('click', function (e) {
-    var action, transition, state, position;
+    var action, transition, state, position, data, openPanel;
     var panel = getPanel(e);
 
-    if (!panel) {
-      closeAll(e);
+    if (!panel &&
+      (e.target.classList.contains('panel') ||
+       hasParent(e.target, 'panel'))) return;
+
+    // close currently open panel
+    if (panel && isOpen(panel)) {
+      close(panel);
       return;
     }
 
-    // options
+    openPanel = findOpen();
+
+    // close other panel
+    if (openPanel) {
+      close(openPanel);
+      return;
+    }
+
+    if (!panel) return;
+
     action = e.target.dataset.action || "open";
-    transition = panel.dataset.transition || "overlay";
-    state = panel.dataset.state || "open";
-    position = panel.dataset.position || "left";
+    data = getData(panel);
 
-    if (action == "open" && state == "open") {
-      open[transition](panel, position);
-      panel.dataset.state = "close";
+    if (action == "open" && data.state == "close") {
+      open(panel);
     }
-    else {
-      close[transition](panel, position);
-      delete panel.dataset.state;
-    }
+  });
 
-    e.preventDefault();
-
-  }, false);
-
-})();
+}).call(this);
