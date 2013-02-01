@@ -180,7 +180,9 @@
     openPanel = findOpen();
 
     // close open panel
-    if (openPanel) {
+    if (openPanel &&
+      !e.target.classList.contains('panel') &&
+      !hasParent(e.target, 'panel')) {
       close(openPanel);
       return;
     }
@@ -192,6 +194,9 @@
 
     if (action == "open" && data.state == "close") {
       open(panel);
+    }
+    else if (openPanel && action == "close") {
+      close(panel);
     }
   });
 
