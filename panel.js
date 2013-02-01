@@ -175,17 +175,11 @@
 
     if (!panel &&
       (e.target.classList.contains('panel') ||
-       hasParent(e.target, 'panel'))) return;
-
-    // close currently open panel
-    if (panel && isOpen(panel)) {
-      close(panel);
-      return;
-    }
+        hasParent(e.target, 'panel'))) return;
 
     openPanel = findOpen();
 
-    // close other panel
+    // close open panel
     if (openPanel) {
       close(openPanel);
       return;
