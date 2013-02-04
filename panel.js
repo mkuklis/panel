@@ -17,6 +17,7 @@
 
   var open = function (panel) {
     var data = getData(panel);
+
     open[data.transition](panel, data.position);
     setData(panel, "state", "open");
     panel.classList.add(data.transition);
@@ -25,6 +26,7 @@
   open.overlay = function (panel, pos) {
     addStyles(panel, pos, -panel.offsetWidth + 'px');
     panel.classList.add(positionMap[pos]);
+    
     setTimeout(function () {
       addStyles(panel, 'opacity', 1, 'z-index', 999, pos, '0px');
     }, 100);
@@ -41,6 +43,7 @@
   open.push = function (panel, pos) {
     addStyles(panel, 'opacity', 1, 'z-index', 998, pos, '0px');
     panel.classList.add(positionMap[pos]);
+
     findSiblings(panel).forEach(function (sibling) {
       sibling.classList.add(positionMap[pos]);
       addStyles(sibling, pos, panel.offsetWidth + 'px', 'z-index', 999);
@@ -49,6 +52,7 @@
 
   var close = function (panel) {
     var data = getData(panel);
+
     close[data.transition](panel, data.position);
     panel.classList.remove(data.transition);
     delete panel.dataset.state;
@@ -72,6 +76,7 @@
       removeStyles(sibling, pos);
       sibling.addEventListener(transitionEnd, clean);
     });
+
     panel.addEventListener(transitionEnd, clean);
     addStyles(panel, pos, -panel.offsetWidth + 'px');
   };
