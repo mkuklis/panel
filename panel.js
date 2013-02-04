@@ -17,7 +17,7 @@
     var data = getData(panel);
     open[data.transition](panel, data.position);
     setData(panel, "state", "open");
-  }
+  };
 
   open.overlay = function (panel, pos) {
     addStyles(panel, pos, -panel.offsetWidth + 'px');
@@ -48,7 +48,7 @@
     var data = getData(panel);
     close[data.transition](panel, data.position);
     delete panel.dataset.state;
-  }
+  };
 
   close.overlay = function (panel, pos) {
     panel.addEventListener(transitionEnd, clean);
@@ -84,7 +84,7 @@
       removeStyles(node.panel, pos, "opacity", "z-index");
       delete node.panel
     }
-  }
+  };
 
   var getPanel = function (e) {
     var anchor = e.target;
