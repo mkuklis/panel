@@ -5,7 +5,9 @@
  */
 
 (function () {
-
+  
+  "use strict";
+  
   var positionMap = {
     left:  'panel-left',
     right: 'panel-right'
@@ -17,14 +19,15 @@
     var data = getData(panel);
     open[data.transition](panel, data.position);
     setData(panel, "state", "open");
+    panel.classList.add(data.transition);
   };
 
   open.overlay = function (panel, pos) {
     addStyles(panel, pos, -panel.offsetWidth + 'px');
+    panel.classList.add(positionMap[pos]);
     setTimeout(function () {
       addStyles(panel, 'opacity', 1, 'z-index', 999, pos, '0px');
-      panel.classList.add(positionMap[pos]);
-    });
+    }, 100);
   };
 
   open.reveal = function (panel, pos) {
@@ -47,6 +50,7 @@
   var close = function (panel) {
     var data = getData(panel);
     close[data.transition](panel, data.position);
+    panel.classList.remove(data.transition);
     delete panel.dataset.state;
   };
 
@@ -144,7 +148,7 @@
   };
 
   var addStyles = function (node, styles) {
-    var args, i, key;
+    var args, i, key, l;
 
     if (styles === Object(styles)) {
       for (key in styles) {
@@ -160,7 +164,7 @@
   };
 
   var removeStyles = function (node, styles) {
-    var i;
+    var i, l;
     var args = arguments;
 
     for (i = 1, l = args.length; i < l; i++) {
@@ -185,6 +189,7 @@
       !e.target.classList.contains('panel') &&
       !hasParent(e.target, 'panel')) {
       close(openPanel);
+
       return;
     }
 

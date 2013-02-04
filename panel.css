@@ -16,8 +16,8 @@
 }
 
 .panel.overlay {
-  -webkit-box-shadow: 3px 0px 3px rgba(0,0,0,.15);
-  box-shadow: 3px 0px 3px rgba(0,0,0,.15);
+  -webkit-box-shadow: 5px 0px 5px rgba(0,0,0,.15);
+  box-shadow: 5px 0px 5px rgba(0,0,0,.15);
 }
 
 .panel.reveal,
