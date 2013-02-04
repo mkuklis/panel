@@ -74,13 +74,14 @@
 
   var clean = function (e) {
     var node = e.target;
+    var pos = e.propertyName;
 
     node.removeEventListener(transitionEnd, clean);
-    node.classList.remove(positionMap[e.propertyName]);
-    removeStyles(node, e.propertyName, "opacity", "z-index");
+    node.classList.remove(positionMap[pos]);
+    removeStyles(node, pos, "opacity", "z-index");
 
     if (node.panel) {
-      removeStyles(node.panel, e.propertyName, "opacity", "z-index");
+      removeStyles(node.panel, pos, "opacity", "z-index");
       delete node.panel
     }
   }
