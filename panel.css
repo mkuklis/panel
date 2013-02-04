@@ -1,25 +1,110 @@
+body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
 .panel {
   height: 100%;
   width: 250px;
   position: absolute;
   opacity: 0;
+  background: #4f4f4f;
 }
 
+/* panel transitions */
 .panel-left {
   -webkit-transition: left .2s ease-out;
   transition: left .2s ease-out;
 }
-
 .panel-right {
   -webkit-transition: right .2s ease-out;
   transition: right .2s ease-out;
 }
 
-.panel.overlay {
+/* overlay shadow */
+.panel-left.overlay {
   -webkit-box-shadow: 5px 0px 5px rgba(0,0,0,.15);
   box-shadow: 5px 0px 5px rgba(0,0,0,.15);
 }
+.panel-right.overlay {
+  -webkit-box-shadow: -5px 0px 5px rgba(0,0,0,.15);
+  box-shadow: -5px 0px 5px rgba(0,0,0,.15);
+}
 
-.panel.reveal,
-.panel.push {
+/* reveal shadow */
+.panel.reveal~.panel-left {
+  -webkit-box-shadow: -5px 0px 5px #404040;
+  box-shadow: -5px 0px 5px #404040;
+}
+.panel.reveal~.panel-right {
+  -webkit-box-shadow: 5px 0px 5px #404040;
+  box-shadow: 5px 0px 5px #404040;
+}
+
+.page .container {
+  height: 100%;
+  background: #eee;
+  width: 100%;
+  top: 0px;
+  position: absolute;
+}
+
+/* additional styles for demo - you can remove these */
+.page .header, 
+.page .footer, 
+.page .content {
+  padding: 5px;
+}
+
+.panel ul {
+  list-style-type: none;
+  margin: 0px;
+  padding: 0px;
+}
+
+.panel ul li {
+  height: 32px;
+  padding: 10px 0px 0px 10px;
+  border-bottom: 1px solid #414141;
+}
+
+a.icon {
+  display: block;
+  height: 32px;
+  line-height: 26px;
+  text-decoration: none;
+  padding-left: 40px;
+  font-size: 16px;
+  font-family: Arial;
+  font-weight: normal;
+  color: #fff;
+}
+
+a.icon.home {
+  background: url('examples/images/home.png') no-repeat;
+}
+
+a.icon.search {
+  background: url('examples/images/search.png') no-repeat;
+}
+
+a.icon.photography {
+  background: url('examples/images/photography.png') no-repeat;
+}
+
+a.icon.world {
+  background: url('examples/images/world.png') no-repeat;
+}
+
+a.icon.settings {
+  background: url('examples/images/settings.png') no-repeat;
+}
+
+a.icon.comment {  
+  background: url('examples/images/comment.png') no-repeat;
+}
+
+a.icon.menu {
+  background: url('examples/images/menu.png') no-repeat;
 }
