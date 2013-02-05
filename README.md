@@ -1,6 +1,8 @@
 # Panel
 
-  Panel component for webkit devices.
+  Panel component for webkit devices. 
+
+  [Demo](http://jsbin.com/enovav/8)
 
   <table>
     <tr>
